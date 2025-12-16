@@ -23,15 +23,13 @@
         }
         .btn-transition { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        /* 选中状态样式 */
         .btn-active-primary {
-            background-color: #0284c7 !important; /* Sky-600 */
+            background-color: #0284c7 !important;
             color: #fff !important;
             border-color: #0284c7 !important;
             box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.3);
         }
 
-        /* 标签选中颜色 */
         .btn-active-slate { background-color: #475569 !important; color: white !important; border-color: #475569 !important; }
         .btn-active-teal { background-color: #0d9488 !important; color: white !important; border-color: #0d9488 !important; }
 
@@ -232,6 +230,19 @@
                                 <img :src="resizeImg(img, 800)" class="w-full h-full object-cover" alt="Place Image">
                             </div>
                         </template>
+                        
+                        <button x-show="modalData.images.length > 1"
+                                @click.stop="prevImg()" 
+                                class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/60 transition-colors z-30">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+
+                        <button x-show="modalData.images.length > 1"
+                                @click.stop="nextImg()"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/60 transition-colors z-30">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+
                         <div x-show="modalData.images.length > 1" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-1.5 z-20">
                             <template x-for="(img, index) in modalData.images" :key="index">
                                 <div class="w-1.5 h-1.5 rounded-full transition-colors duration-300 shadow-sm" 
@@ -243,7 +254,7 @@
                 
                 <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white/70 to-transparent z-10 pointer-events-none"></div>
 
-                <div class="absolute top-3 left-3 z-20 flex flex-wrap gap-1 max-w-[85%]">
+                <div class="absolute top-3 left-3 z-20 flex flex-wrap gap-1 max-w-[80%]">
                     <span x-show="modalData?.popularLevel == 3" class="text-[10px] font-black px-2 py-1 rounded bg-red-500 text-white shrink-0 shadow-sm">🚩 打卡地标</span>
                     <span x-show="modalData?.popularLevel == 2" class="text-[10px] font-black px-2 py-1 rounded bg-blue-500 text-white shrink-0 shadow-sm">🌟 懂行之选</span>
                     <span x-show="modalData?.popularLevel == 1" class="text-[10px] font-black px-2 py-1 rounded bg-purple-500 text-white shrink-0 shadow-sm">💎 私藏冷门</span>
@@ -445,7 +456,6 @@
                 regions: [],
                 categories: [],
 
-                // 新增：10大分类映射表
                 categoryMap: {
                     1: '地标与观景',
                     2: '自然与公园',
@@ -459,7 +469,6 @@
                     10: '城镇与一日游'
                 },
 
-                // 更新：10大分类默认图片
                 defaultImages: {
                     '地标与观景': 'https://images.unsplash.com/photo-1506953823976-52e1fdc0149b?w=800&q=80',
                     '自然与公园': 'https://images.unsplash.com/photo-1596238836024-4f518e38484f?w=800&q=80',
@@ -504,11 +513,9 @@
 
                 processData(data) {
                     this.places = data.map((row, index) => {
-                        // 使用新的数字映射逻辑
                         const catId = parseInt(row.category);
                         let cat = this.categoryMap[catId] || '其他';
                         
-                        // 兼容旧数据：如果是字符串且没匹配到ID，则保留原样
                         if (!this.categoryMap[catId] && row.category) {
                              cat = row.category.trim();
                         }
@@ -528,7 +535,6 @@
                         }
                         
                         if (imgArray.length === 0) {
-                            // 使用映射后的中文名为key查找默认图
                             imgArray = [this.defaultImages[cat] || this.defaultImages['Other']];
                         }
 
