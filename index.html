@@ -282,15 +282,18 @@
                               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                               loading="lazy" alt="Place">
                          
-                         <div class="absolute top-3 left-3 z-10">
+                         <div class="absolute bottom-2 left-2 z-10 flex flex-wrap gap-1 max-w-[85%]">
                             <span x-show="p.environment === 'outdoor'" class="bg-white/90 backdrop-blur text-green-700 text-[10px] font-black uppercase px-2 py-1 rounded-full shadow-sm flex items-center gap-1">🌳 户外</span>
                             <span x-show="p.environment === 'indoor'" class="bg-white/90 backdrop-blur text-indigo-700 text-[10px] font-black uppercase px-2 py-1 rounded-full shadow-sm flex items-center gap-1">🏛️ 室内</span>
+                            <span x-show="p.popularLevel == 3" class="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md flex items-center gap-1 tracking-wide">🚩 打卡地标</span>
+                            <span x-show="p.popularLevel == 2" class="bg-blue-500 text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md flex items-center gap-1 tracking-wide">🌟 懂行之选</span>
+                            <span x-show="p.popularLevel == 1" class="bg-purple-500 text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md flex items-center gap-1 tracking-wide">💎 私藏冷门</span>
                          </div>
                          
-                         <div class="absolute top-3 right-3 z-10">
-                             <span x-show="p.popularLevel == 3" class="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md flex items-center gap-1 tracking-wide">🚩 打卡地标</span>
-                             <span x-show="p.popularLevel == 2" class="bg-blue-500 text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md flex items-center gap-1 tracking-wide">🌟 懂行之选</span>
-                             <span x-show="p.popularLevel == 1" class="bg-purple-500 text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md flex items-center gap-1 tracking-wide">💎 私藏冷门</span>
+                         <div x-show="p.images.length > 1" class="absolute top-3 right-3 z-10">
+                             <span class="bg-black/50 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                                 📷 <span x-text="p.images.length"></span>
+                             </span>
                          </div>
                     </div>
 
