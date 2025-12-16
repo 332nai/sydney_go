@@ -235,7 +235,7 @@
                 showFilters: true,
                 showModal: false,
                 modalData: null,
-                activeImgIndex: 0, // 新增：控制轮播当前显示的图片索引
+                activeImgIndex: 0, 
                 envFilter: 'all', 
                 activeRegions: [],
                 activeCategories: [],
@@ -253,7 +253,6 @@
                 },
 
                 init() {
-                    // === 你的 Google Sheet ID ===
                     const sheetId = '1S4j1zUw3kl_UKvNNEq7luAApIIaU---L2KRZDTWVkuY';
                     const sheetName = 'Sheet1'; 
                     
@@ -278,7 +277,6 @@
                 processData(data) {
                     this.places = data.map((row, index) => {
                         let cat = row.category ? row.category.trim() : 'Other';
-                        // 匹配默认图片类别
                         let imgKey = 'Other';
                         if (cat.includes('Beach')) imgKey = 'Beach';
                         else if (cat.includes('Walk') || cat.includes('Hike')) imgKey = 'Hiking';
@@ -286,14 +284,21 @@
                         else if (cat.includes('Park') || cat.includes('Garden')) imgKey = 'Park';
                         else if (cat.includes('Shop')) imgKey = 'Shopping';
 
-                        // === 修改点：分割图片 URL ===
+                        // === 智能分割逻辑升级 ===
                         let imgArray = [];
                         if (row.image && typeof row.image === 'string') {
-                            // 使用 |||| 分割，去空格，并过滤空值
-                            imgArray = row.image.split('||||').map(s => s.trim()).filter(s => s.startsWith('http'));
+                            // 使用正则：兼容 3个竖线(|||), 4个竖线(||||), 或者 URL 编码后的竖线(%7C%7C%7C)
+                            const separatorRegex = /\|{3,4}|%7C{3,4}/i;
+                            
+                            imgArray = row.image.split(separatorRegex)
+                                .map(s => {
+                                    s = s.trim();
+                                    // 尝试解码，防止图片链接里包含 encoded 字符
+                                    try { return decodeURIComponent(s); } catch(e) { return s; }
+                                })
+                                .filter(s => s.startsWith('http'));
                         }
                         
-                        // 如果没有有效图片，使用默认图
                         if (imgArray.length === 0) {
                             imgArray = [this.defaultImages[imgKey]];
                         }
@@ -308,7 +313,7 @@
                             isPetFriendly: String(row.isPetFriendly).toUpperCase() === 'TRUE',
                             isFamilyFriendly: String(row.isFamilyFriendly).toUpperCase() === 'TRUE',
                             desc: row.desc || '暂无描述',
-                            images: imgArray // 现在这里是一个数组
+                            images: imgArray 
                         };
                     });
 
@@ -353,10 +358,9 @@
                 },
                 openModal(place) {
                     this.modalData = place;
-                    this.activeImgIndex = 0; // 打开时重置为第一张图
+                    this.activeImgIndex = 0; 
                     this.showModal = true;
                 },
-                // === 新增：轮播控制函数 ===
                 nextImg() {
                     if (!this.modalData) return;
                     const len = this.modalData.images.length;
