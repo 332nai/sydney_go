@@ -15,7 +15,6 @@
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
         
-        /* === 风格：Nature & Breeze (自然微风) === */
         .glass-effect { 
             background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(12px); 
@@ -23,14 +22,12 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         }
         .btn-transition { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        
         .btn-active-primary {
             background-color: #0ea5e9 !important;
             color: #fff !important;
             border-color: #0ea5e9 !important;
             box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.3);
         }
-
         .bg-nature {
             background-color: #E0F2F1;
             background-image: linear-gradient(135deg, #E0F2F1 0%, #B2EBF2 50%, #BBDEFB 100%);
@@ -65,7 +62,6 @@
 
             <div class="pb-1">
                 <div x-show="showFilters" x-collapse class="space-y-3 pt-2">
-                    
                     <div class="flex items-center space-x-2 overflow-x-auto hide-scroll pb-1">
                         <span class="text-xs font-black text-slate-400 uppercase w-12 shrink-0">🌤️ 环境</span>
                         <button @click="envFilter = 'all'" :class="envFilter === 'all' ? 'bg-slate-800 text-white' : 'bg-white text-slate-600 hover:text-sky-600'" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-transparent shadow-sm transition-colors">全部</button>
@@ -284,17 +280,21 @@
                         else if (cat.includes('Park') || cat.includes('Garden')) imgKey = 'Park';
                         else if (cat.includes('Shop')) imgKey = 'Shopping';
 
-                        // === 智能分割逻辑升级 ===
+                        // === 修复后的智能分割与清洗 ===
                         let imgArray = [];
                         if (row.image && typeof row.image === 'string') {
-                            // 使用正则：兼容 3个竖线(|||), 4个竖线(||||), 或者 URL 编码后的竖线(%7C%7C%7C)
-                            const separatorRegex = /\|{3,4}|%7C{3,4}/i;
+                            // 使用更宽松的正则：匹配2个及以上的竖线，或者URL编码的竖线，或者换行符
+                            const separatorRegex = /\|{2,}|%7C{2,}|\n/g;
                             
                             imgArray = row.image.split(separatorRegex)
                                 .map(s => {
                                     s = s.trim();
-                                    // 尝试解码，防止图片链接里包含 encoded 字符
-                                    try { return decodeURIComponent(s); } catch(e) { return s; }
+                                    // 仅当链接看起来被URL编码了(比如开头是http%3A)，才尝试解码
+                                    // 否则保持原样，防止破坏正常的链接结构
+                                    if (s.match(/^http%3A/i) || s.includes('%3A%2F%2F')) {
+                                         try { return decodeURIComponent(s); } catch(e) { return s; }
+                                    }
+                                    return s;
                                 })
                                 .filter(s => s.startsWith('http'));
                         }
