@@ -278,7 +278,7 @@
                     </div>
 
                     <div class="w-full px-4 mb-4 overflow-y-auto text-sm text-slate-600 leading-relaxed font-medium">
-                         <p x-text="modalData?.desc"></p>
+                         <p x-text="modalData?.descDetail"></p>
                     </div>
                 </div>
             </div>
@@ -545,7 +545,11 @@
                             isFree: String(row.isFree).toUpperCase() === 'TRUE',
                             isPetFriendly: String(row.isPetFriendly).toUpperCase() === 'TRUE',
                             isFamilyFriendly: String(row.isFamilyFriendly).toUpperCase() === 'TRUE',
+                            
+                            // 修改部分：列表用 desc，弹窗用 descDetail (description_detail)
                             desc: row.desc || '暂无描述',
+                            descDetail: row.description_detail || row.desc || '暂无描述',
+                            
                             images: imgArray 
                         };
                     });
