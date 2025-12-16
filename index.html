@@ -24,7 +24,7 @@
         }
         .btn-transition { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        /* 选中状态样式 - 对应餐饮版的 Black，这里用 Sky Blue */
+        /* 选中状态样式 */
         .btn-active-primary {
             background-color: #0284c7 !important; /* Sky-600 */
             color: #fff !important;
@@ -198,16 +198,13 @@
             <div class="p-6 pt-2 flex-1 flex flex-col items-center text-center -mt-8 relative z-10 overflow-hidden w-full">
                 <div x-show="modalData" class="w-full flex flex-col items-center h-full">
                     
-                    <div class="flex flex-nowrap justify-center gap-2 mb-3 overflow-x-auto hide-scroll px-4 w-full shrink-0">
-                        <span class="text-[10px] font-black uppercase px-2 py-1 rounded bg-slate-100 text-slate-800 shrink-0" x-text="modalData?.region"></span>
-                        <span class="text-[10px] font-black px-2 py-1 rounded bg-teal-100 text-teal-800 shrink-0" x-text="modalData?.category"></span>
-                        <span x-show="modalData?.environment === 'outdoor'" class="text-[10px] font-bold px-2 py-1 rounded bg-green-100 text-green-800 shrink-0">🌳 户外</span>
-                        <span x-show="modalData?.environment === 'indoor'" class="text-[10px] font-bold px-2 py-1 rounded bg-indigo-100 text-indigo-800 shrink-0">🏛️ 室内</span>
-                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-3 leading-tight shrink-0 px-2 line-clamp-2" x-text="modalData?.name"></h2>
 
-                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2 leading-tight shrink-0 px-2 line-clamp-2" x-text="modalData?.name"></h2>
-                    
-                    <div class="flex gap-2 mb-3 shrink-0">
+                    <div class="flex flex-wrap justify-center gap-2 mb-4 overflow-x-auto hide-scroll px-4 w-full shrink-0">
+                        <span class="text-[10px] font-black uppercase px-2 py-1 rounded bg-slate-100 text-slate-800 shrink-0 border border-slate-200" x-text="modalData?.region"></span>
+                        <span class="text-[10px] font-black px-2 py-1 rounded bg-teal-50 text-teal-800 shrink-0 border border-teal-100" x-text="modalData?.category"></span>
+                        <span x-show="modalData?.environment === 'outdoor'" class="text-[10px] font-bold px-2 py-1 rounded bg-green-50 text-green-800 shrink-0 border border-green-100">🌳 户外</span>
+                        <span x-show="modalData?.environment === 'indoor'" class="text-[10px] font-bold px-2 py-1 rounded bg-indigo-50 text-indigo-800 shrink-0 border border-indigo-100">🏛️ 室内</span>
                         <span x-show="modalData?.isPetFriendly" class="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded border border-orange-100">🐶 宠物友好</span>
                         <span x-show="modalData?.isFamilyFriendly" class="text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-1 rounded border border-pink-100">👨‍👩‍👧‍👦 适合家庭</span>
                         <span x-show="modalData?.isFree" class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100">🆓 免费</span>
@@ -266,6 +263,7 @@
                               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                               loading="lazy" 
                               alt="Place">
+                         
                          <div class="absolute top-3 left-3 z-10">
                             <span x-show="p.environment === 'outdoor'" class="bg-white/90 backdrop-blur text-green-700 text-[10px] font-black uppercase px-2 py-1 rounded-full shadow-sm flex items-center gap-1">🌳 户外</span>
                             <span x-show="p.environment === 'indoor'" class="bg-white/90 backdrop-blur text-indigo-700 text-[10px] font-black uppercase px-2 py-1 rounded-full shadow-sm flex items-center gap-1">🏛️ 室内</span>
@@ -275,11 +273,8 @@
                                  📷 <span x-text="p.images.length"></span>
                              </span>
                          </div>
-                         <div class="absolute bottom-2 left-2 flex gap-1 flex-wrap pr-2">
-                             <span x-show="p.isPetFriendly" class="bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-md">🐶</span>
-                             <span x-show="p.isFree" class="bg-emerald-600/80 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-md font-bold">FREE</span>
-                         </div>
                     </div>
+
                     <div class="p-5 flex-1 flex flex-col">
                         <div class="flex justify-between items-start mb-2">
                             <span class="text-[10px] font-black uppercase tracking-wider text-sky-600" x-text="p.region"></span>
@@ -288,12 +283,14 @@
                         <h3 class="text-xl font-black text-slate-800 leading-tight mb-2 group-hover:text-sky-600 transition-colors" x-text="p.name"></h3>
                         <p class="text-slate-500 text-sm mb-4 leading-relaxed line-clamp-2" x-text="p.desc"></p>
                         
-                        <div class="mt-auto pt-3 border-t border-slate-50 flex justify-between items-center">
-                            <div class="flex gap-1">
-                                <span x-show="p.isFamilyFriendly" class="text-[10px] text-pink-600 bg-pink-50 px-1.5 py-0.5 rounded border border-pink-100">亲子</span>
+                        <div class="mt-auto pt-3 border-t border-slate-50 flex justify-between items-center gap-2">
+                            <div class="flex flex-wrap gap-1">
+                                <span x-show="p.isFamilyFriendly" class="text-[10px] text-pink-600 bg-pink-50 px-1.5 py-0.5 rounded border border-pink-100 font-bold">亲子</span>
+                                <span x-show="p.isPetFriendly" class="text-[10px] text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded border border-orange-100 font-bold">宠物</span>
+                                <span x-show="p.isFree" class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100 font-bold">免费</span>
                             </div>
                             
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2 shrink-0">
                                 <button @click.stop="copyKeyword(p.name)" 
                                         class="text-[10px] text-slate-400 bg-slate-50 hover:bg-red-50 hover:text-red-500 border border-slate-100 hover:border-red-100 px-2 py-1 rounded transition-all whitespace-nowrap font-bold">
                                     📕 搜小红书
@@ -339,25 +336,20 @@
                 currentPage: 1,
                 itemsPerPage: 18,
                 
-                // 筛选状态
                 showFilters: true,
                 expanded: { regions: false, cats: false, env: false },
                 
-                // 弹窗状态
                 showModal: false,
                 modalData: null,
                 activeImgIndex: 0,
                 isRandomPick: false,
                 
-                // 列表模式
                 isShuffleMode: false,
                 shuffledList: [],
                 
-                // 提示
                 showToast: false,
                 toastMessage: '',
 
-                // 筛选器值
                 envFilter: 'all', 
                 activeRegions: [],
                 activeCategories: [],
@@ -396,7 +388,6 @@
                         });
                 },
 
-                // 图片代理保持不变（针对景点大图很有用）
                 resizeImg(url, width = 400) {
                     if (!url) return '';
                     if (url.includes('images.unsplash.com')) return url;
@@ -449,14 +440,12 @@
                     this.categories = [...new Set(this.places.map(p => p.category))].filter(Boolean).sort();
                 },
 
-                // === 新增：Toast 工具 ===
                 triggerToast(msg) {
                     this.toastMessage = msg;
                     this.showToast = true;
                     setTimeout(() => { this.showToast = false; }, 2000);
                 },
 
-                // === 新增：复制功能 ===
                 copyKeyword(name) {
                     if (!name) return;
                     const text = `悉尼 ${name}`;
@@ -469,7 +458,6 @@
                     }
                 },
 
-                // === 新增：分享 App ===
                 shareApp() {
                     if (navigator.share) {
                         navigator.share({
@@ -483,7 +471,6 @@
                     }
                 },
 
-                // === 筛选逻辑 (升级版) ===
                 toggleFilter(arr, val) {
                     if (this[arr].includes(val)) this[arr] = this[arr].filter(x => x !== val);
                     else this[arr].push(val);
@@ -500,7 +487,6 @@
                     this.expanded[section] = !this.expanded[section];
                 },
 
-                // === 列表逻辑 (含 Shuffle) ===
                 shuffleView() {
                     let list = [...this.filteredPlaces];
                     for (let i = list.length - 1; i > 0; i--) {
@@ -541,7 +527,6 @@
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 },
 
-                // === Modal 逻辑 (升级版) ===
                 openModal(place) {
                     this.modalData = place;
                     this.activeImgIndex = 0; 
